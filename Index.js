@@ -1,41 +1,48 @@
 import express from 'express';
 import cors from 'cors';
-import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+import { Configuration, OpenAIApi } from 'openai';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const HUGGINGFACE_API_KEY = 'Dsv4NpZBe0T23dTuSku956zKGDfbFVDQse7yETap';
+const openai = new OpenAIApi(
+  new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+);
 
 app.post('/gerar-redacao', async (req, res) => {
   const { tema } = req.body;
   if (!tema) return res.status(400).json({ error: 'Tema é obrigatório.' });
 
   try {
-    const response = await fetch('https://api-inference.huggingface.co/models/gpt2', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        inputs: `Tema da redação: ${tema}. Desenvolva uma redação clara e envolvente.`
-      })
+    const prompt = `Crie um título e uma redação completa e argumentativa sobre o seguinte tema:\n"${tema}".\nRetorne no seguinte formato:\nTítulo: <título>\nRedação: <redação>`;
+    
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.9,
+      max_tokens: 1000
     });
 
-    const data = await response.json();
-    if (data.error) return res.status(500).json({ error: data.error });
+    const resposta = completion.data.choices[0].message.content;
 
-    const textoGerado = data[0]?.generated_text || 'Não foi possível gerar texto.';
+    const titulo = resposta.match(/Título: (.*)/)?.[1] || 'Título não encontrado';
+    const redacao = resposta.match(/Redação:([\s\S]*)/)?.[1]?.trim() || 'Redação não encontrada';
 
-    // Usamos o tema como título e o texto gerado como redação
-    res.json({ titulo: tema, texto: textoGerado });
+    res.json({ titulo, texto: redacao });
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao gerar redação.' });
   }
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
+app.listen(port, () => console.log(`✅ Servidor rodando na porta ${port}`));
