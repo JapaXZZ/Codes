@@ -1,12 +1,3 @@
-const script = document.createElement("script");
-script.src =
-  "https://cdn.jsdelivr.net/gh/DarkModde/Dark-Scripts/ProtectionScript.js";
-document.head.appendChild(script);
-
-console.clear();
-const noop = () => {};
-console.warn = console.error = window.debug = noop;
-
 class UrlHelper {
   static extractUrlParam(url, paramName) {
     return new URL(url).searchParams.get(paramName);
@@ -359,8 +350,8 @@ class ActivityProcessorUI {
     this.isProcessing = false;
 
     this.notificationManager.showNotification(
-      "Script Iniciado!",
-      "Expansão do foda-se iniciada com sucesso!",
+      "Iniciando...",
+      "Script iniciado com sucesso!",
       "success",
     );
   }
@@ -432,7 +423,7 @@ class ActivityProcessorUI {
       if (simplePages.length === 0 && exams.length === 0) {
         this.notificationManager.showNotification(
           "Finalizado",
-          "Atividades Finalizadas! | Caso Sobrar alguma execute novamente",
+          "Atividades Finalizadas! | Se sobrar alguma execute novamente!",
           "success",
         );
         setTimeout(() => {
