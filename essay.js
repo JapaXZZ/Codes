@@ -1,4 +1,4 @@
-const tituloIA = "O impacto da inteligência artificial na sociedade moderna";
+const tituloIA = "O impacto da inteligência artificial na sociedaade moderna";
 const redacaoIA = `
 A inteligência artificial (IA) tem transformado diversos setores da sociedade contemporânea, como saúde, educação e segurança...
 
