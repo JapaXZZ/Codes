@@ -1,21 +1,17 @@
-// Textos da IA (exemplo)
-const tituloIA = "A influência da tecnologia no comportamento humano";
+const tituloIA = "O impacto da inteligência artificial na sociedade moderna";
 const redacaoIA = `
-A tecnologia, ao longo dos anos, transformou radicalmente o modo como os seres humanos se relacionam, trabalham e aprendem...
+A inteligência artificial (IA) tem transformado diversos setores da sociedade contemporânea, como saúde, educação e segurança...
 
-[continua a redação aqui]
+[continuação da redação gerada por IA]
 `;
 
-// Função para preencher campo e disparar evento
 function preencherCampo(campo, texto) {
   campo.value = texto;
   campo.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-// Seleciona todos os textareas com a classe da redação
 const textareas = document.querySelectorAll('textarea.MuiInputBase-inputMultiline');
 
-// Define qual é o título (altura menor) e a redação (altura maior)
 let campoTitulo = null;
 let campoRedacao = null;
 
@@ -28,10 +24,12 @@ textareas.forEach((textarea) => {
   }
 });
 
-// Preenche os campos, se encontrados
 if (campoTitulo && campoRedacao) {
   preencherCampo(campoTitulo, tituloIA);
   preencherCampo(campoRedacao, redacaoIA);
+  alert("✅ Redação colada com sucesso!");
+  console.log("Preenchido com sucesso.");
 } else {
-  alert("Não foi possível localizar os campos corretamente.");
+  alert("❌ Não foi possível localizar os campos.");
+  console.error("Erro: Campos não encontrados.");
 }
